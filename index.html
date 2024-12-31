@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login/Signup Page</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://apis.google.com/js/platform.js" async defer></script>
+</head>
+<body>
+    <div class="box">
+        <h2>Login / Signup</h2>
+        <form id="loginForm">
+            <div class="inputBox">
+                <input type="email" required onkeyup="this.setAttribute('value', this.value);" />
+                <label>Email</label>
+            </div>
+            <div class="inputBox">
+                <input type="password" required onkeyup="this.setAttribute('value', this.value);" />
+                <label>Password</label>
+            </div>
+            <input type="submit" value="Login" />
+            <p>or</p>
+            <div class="g_id_signin" data-client_id="975331912331-7s725b7ussgvjtualt5spb4dnahbruke.apps.googleusercontent.com" data-login_uri="https://seekjob.com.np/login" data-callback="handleCredentialResponse"></div>
+            <p>Don't have an account? <a href="#" id="signupLink">Sign up</a></p>
+        </form>
+    </div>
+
+    <script>
+        function handleCredentialResponse(response) {
+            const id_token = response.credential;
+            console.log("ID Token: " + id_token);
+        }
+
+        document.getElementById('loginForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+        });
+
+        document.getElementById('signupLink').addEventListener('click', function() {
+        });
+    </script>
+</body>
+</html>
