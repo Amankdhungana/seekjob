@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="css/styles.css">
+    <title>Profile | SeekJob</title>
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+           
+            background-size: cover;
+            color: #333;
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .profile-container {
+            background: rgba(255, 255, 255, 0.9);
+            padding: 30px 50px;
+            border-radius: 10px;
+            text-align: center;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            width: 90%;
+            max-width: 500px;
+        }
+
+        .profile-container input, .profile-container textarea {
+            width: 100%;
+            padding: 12px;
+            margin: 10px 0;
+            border-radius: 5px;
+            border: 1px solid #ddd;
+        }
+
+        .profile-container button {
+            background-color: #ff416c;
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            margin: 10px;
+            border-radius: 5px;
+            font-size: 1em;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease-in-out;
+        }
+
+        .profile-container button:hover {
+            background-color: #ff4b2b;
+        }
+
+        h1 {
+            font-size: 2em;
+            margin-bottom: 20px;
+        }
+
+        .profile-image-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .profile-image-container input[type="file"] {
+            margin-top: 10px;
+        }
+
+        #uploaded-img {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            margin-top: 10px;
+            display: none;
+        }
+
+        .profile-text {
+            font-size: 0.8em;
+            color: #333;
+            text-align: center;
+            margin-top: 5px;
+        }
+    </style>
+    <script>
+        function handleImageUpload(event) {
+            const reader = new FileReader();
+            reader.onload = function() {
+                
+                localStorage.setItem('profileImage', reader.result);
+               
+                document.getElementById('uploaded-img').src = reader.result;
+                document.getElementById('uploaded-img').style.display = 'block';
+            };
+            reader.readAsDataURL(event.target.files[0]);
+        }
+
+        function saveProfile() {
+            const name = document.getElementById('name').value;
+            const email = document.getElementById('email').value;
+            const address = document.getElementById('address').value;
+            const description = document.getElementById('description').value;
+            const contact = document.getElementById('contact').value;
+            
+            
+            const profileData = {
+                name: name,
+                email: email,
+                address: address,
+                description: description,
+                contact: contact
+            };
+
+            localStorage.setItem('profileData', JSON.stringify(profileData));
+            alert('Profile saved successfully!');
+            
+            
+            window.location.href = "hirer.html";
+        }
+    </script>
+</head>
+<body>
+    <div class="profile-container">
+        <h1>Complete Your Profile</h1>
+
+        <form onsubmit="event.preventDefault(); saveProfile();">
+            <!-- Profile image upload section -->
+            <div class="profile-image-container">
+                <label for="profile-pic">Add your profile pic</label>
+                <input type="file" id="profile-pic" name="profilePicture" accept="image/*" onchange="handleImageUpload(event)" required>
+                <img id="uploaded-img" src="" alt="Uploaded Profile Picture">
+            </div>
+
+            <input type="text" id="name" placeholder="Your Name" required>
+            <input type="email" id="email" placeholder="Your Email" required>
+            <input type="text" id="address" placeholder="Your Address" required>
+            <input type="text" id="contact" placeholder="Your Contact Number" required>
+            <textarea id="description" placeholder="Description of yourself and your company" rows="4" required></textarea>
+
+            <button type="submit">Save Profile</button>
+        </form>
+    </div>
+</body>
+</html>
