@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="css/styles.css">
+    <title>Hirer | SeekJob</title>
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-size: cover;
+            color: #333;
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .hirer-container {
+            background: rgba(255, 255, 255, 0.8);
+            padding: 30px 50px;
+            border-radius: 10px;
+            text-align: center;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            width: 90%;
+            max-width: 500px;
+            position: relative;
+        }
+
+        /* Profile Image style (initially blank) */
+        .profile-image {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: #ccc;
+            display: block;
+            cursor: pointer;
+        }
+
+        h1 {
+            font-size: 2em;
+            margin-bottom: 20px;
+        }
+
+        button {
+            background-color: #ff416c;
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            margin: 10px;
+            border-radius: 5px;
+            font-size: 1em;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease-in-out;
+            width: 100%;
+        }
+
+        button:hover {
+            background-color: #ff4b2b;
+            transform: scale(1.05);
+        }
+
+        .action-buttons {
+            margin-top: 20px;
+        }
+    </style>
+    <script>
+        let profileImage = localStorage.getItem('profileImage'); 
+        let profileData = JSON.parse(localStorage.getItem('profileData'));
+
+        function checkProfileCompletion() {
+            if (!profileImage || !profileData) {
+                alert("Please complete your profile first!");
+                window.location.href = "profile.html"; 
+            }
+        }
+
+        window.onload = () => {
+            if (profileImage) {
+                document.getElementById('profile-img').src = profileImage;
+                document.getElementById('profile-img').style.backgroundImage = `url(${profileImage})`;
+            }
+        }
+    </script>
+</head>
+<body>
+    <div class="hirer-container">
+        <!-- Profile Image (placeholder, replaced when user uploads a photo) -->
+        <img id="profile-img" class="profile-image" onclick="location.href='profile.html'" alt="Profile Image">
+
+        <h1>Hirer Dashboard</h1>
+        <p>Welcome to the Hirer section. You need to complete your profile before posting jobs, managing listings, or viewing applicants.</p>
+
+        <div class="action-buttons">
+            <button onclick="checkProfileCompletion()">Post a Job</button>
+            <button onclick="checkProfileCompletion()">View Applicants</button>
+            <button onclick="checkProfileCompletion()">Manage Listings</button>
+        </div>
+    </div>
+</body>
+</html>
