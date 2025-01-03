@@ -54,7 +54,7 @@
         <div class="overlay">
           <div class="overlay-panel overlay-left">
             <h1>Welcome Back!</h1>
-            <p>Already have an account? Sign in here!</p>
+            <p>Have an account? Sign in here!</p>
             <button class="ghost" id="showLogin">Sign In</button>
           </div>
           <div class="overlay-panel overlay-right">
@@ -96,56 +96,29 @@
         transition: all 0.6s ease-in-out;
       }
 
-      .form-container.sign-in-container {
-        left: 0;
-        width: 50%;
-        z-index: 2;
-      }
-
-      .form-container.sign-up-container {
+      .sign-up-container {
         left: 0;
         width: 50%;
         opacity: 0;
         z-index: 1;
       }
 
-      .form-container form {
-        background: #ffffff;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        padding: 0 50px;
-        height: 100%;
-        text-align: center;
+      .sign-in-container {
+        left: 0;
+        width: 50%;
+        z-index: 2;
       }
 
-      .form-container form input {
-        background: #f2f2f2;
-        border: none;
-        padding: 12px;
-        margin: 10px 0;
-        width: 100%;
-        border-radius: 5px;
-        font-size: 16px;
+      .container.right-panel-active .sign-up-container {
+        transform: translateX(100%);
+        opacity: 1;
+        z-index: 5;
       }
 
-      .form-container form button {
-        border-radius: 20px;
-        border: 1px solid #ff416c;
-        background-color: #ff416c;
-        color: #ffffff;
-        font-size: 16px;
-        font-weight: bold;
-        padding: 12px 45px;
-        letter-spacing: 1px;
-        text-transform: uppercase;
-        transition: transform 0.2s;
-        cursor: pointer;
-      }
-
-      .form-container form button:hover {
-        transform: scale(1.05);
+      .container.right-panel-active .sign-in-container {
+        transform: translateX(100%);
+        opacity: 0;
+        z-index: 1;
       }
 
       .overlay-container {
@@ -159,9 +132,10 @@
         z-index: 100;
       }
 
-      .overlay-container .overlay {
+      .overlay {
+        background: #ff416c;
         background: linear-gradient(to right, #ff4b2b, #ff416c);
-        color: #ffffff;
+        color: #fff;
         position: relative;
         left: -100%;
         height: 100%;
@@ -182,13 +156,21 @@
         width: 50%;
       }
 
-      .overlay-panel.overlay-right {
-        right: 0;
-        transform: translateX(0);
+      .overlay-left {
+        transform: translateX(-20%);
       }
 
-      .overlay-panel.overlay-left {
-        transform: translateX(-20%);
+      .container.right-panel-active .overlay-container {
+        transform: translateX(-100%);
+      }
+
+      .container.right-panel-active .overlay {
+        transform: translateX(50%);
+      }
+
+      .overlay-right {
+        right: 0;
+        transform: translateX(0);
       }
 
       .ghost {
@@ -201,29 +183,18 @@
         color: red;
         margin-top: 10px;
       }
-
-      .container.right-panel-active .sign-up-container {
-        transform: translateX(100%);
-        opacity: 1;
-        z-index: 5;
-      }
-
-      .container.right-panel-active .overlay-container {
-        transform: translateX(-100%);
-      }
-
-      .container.right-panel-active .sign-in-container {
-        transform: translateX(100%);
-        opacity: 0;
-      }
     </style>
 
     <script>
       const signupForm = document.getElementById("signupForm");
       const loginForm = document.getElementById("loginForm");
       const container = document.getElementById("container");
+      const signupError = document.getElementById("signupError");
+      const loginError = document.getElementById("loginError");
 
-      signupForm.addEventListener("submit", async function (e) {
+      const users = JSON.parse(localStorage.getItem("users")) || {};
+
+      signupForm.addEventListener("submit", function (e) {
         e.preventDefault();
         const name = document.getElementById("signupName").value;
         const email = document.getElementById("signupEmail").value;
@@ -231,53 +202,35 @@
         const confirmPassword = document.getElementById("confirmPassword").value;
 
         if (password !== confirmPassword) {
-          alert("Passwords do not match.");
+          signupError.textContent = "Passwords do not match.";
           return;
         }
 
-        try {
-          const response = await fetch("http://localhost:3000/signup", {
-
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ name, email, password }),
-          });
-
-          const result = await response.json();
-          if (result.error) {
-            alert(result.error);
-          } else {
-            alert("Signup successful!");
-            container.classList.remove("right-panel-active");
-          }
-        } catch (err) {
-          alert("!!Error occurred. Try again later.");
+        if (users[email]) {
+          signupError.textContent = "Email is already registered.";
+          return;
         }
+
+        users[email] = { name, password };
+        localStorage.setItem("users", JSON.stringify(users));
+        signupError.textContent = "";
+        alert("Signup successful!");
+        container.classList.remove("right-panel-active");
       });
 
-      loginForm.addEventListener("submit", async function (e) {
+      loginForm.addEventListener("submit", function (e) {
         e.preventDefault();
         const email = document.getElementById("loginEmail").value;
         const password = document.getElementById("loginPassword").value;
 
-        try {
-          const response = await fetch("http://localhost:3000/login", {
-
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ email, password }),
-          });
-
-          const result = await response.json();
-          if (result.error) {
-            alert(result.error);
-          } else {
-            alert("Login successful!");
-            window.location.href = "welcome.html";
-          }
-        } catch (err) {
-          alert("!!Error occurred. Try again later.");
+        if (!users[email] || users[email].password !== password) {
+          loginError.textContent = "Invalid email or password.";
+          return;
         }
+
+        loginError.textContent = "";
+        alert("Login successful!");
+        window.location.href = "welcome.html";
       });
 
       document.getElementById("showSignup").addEventListener("click", function () {
